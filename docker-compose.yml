@@ -10,7 +10,7 @@ services:
     command: server --console-address ":9001" /data
     restart: always
   blitzbrowser:
-    image: sha256:a7e9103882345cdb4b5e5ebd63e63c4b972b92b2eeb18af80bd739bf60f53985
+    image: sha256:75beb3e809758401bf3520576083f4a8d8094628cb0d61058be56de7cb1fbe32
     command: node ./dist/main.js
     ports:
       - "9999:9999"

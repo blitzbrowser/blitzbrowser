@@ -12,8 +12,8 @@ importers:
         specifier: ^3.911.0
         version: 3.914.0
       '@blitzbrowser/tunnel':
-        specifier: 1.4.0
-        version: 1.4.0
+        specifier: 2.0.2
+        version: 2.0.2
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.4.20(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -458,8 +458,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@blitzbrowser/tunnel@1.4.0':
-    resolution: {integrity: sha512-ENvD68GPZhB4hiYpuc2VLpFZiiTglkRXUx9O/VZKEoWmoNVUwi04BQD1rjhFseS14ZpfYkRhlq7spjmyrNdzaw==}
+  '@blitzbrowser/tunnel@2.0.2':
+    resolution: {integrity: sha512-UviXHPGjdggCyC163RUK3HVDNWzQFHkWopd01uU6TiIwQemDI10VO3kXW0K2R6XAuuWIOUiyeA9lZ14m0VZ65g==}
 
   '@borewit/text-codec@0.1.1':
     resolution: {integrity: sha512-5L/uBxmjaCIX5h8Z+uu+kA9BQLkc/Wl06UGR5ajNRxu+/XjonB5i8JpgFMrPj3LXTCPA0pv8yxUvbUi+QthGGA==}
@@ -4198,9 +4198,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@blitzbrowser/tunnel@1.4.0':
-    dependencies:
-      fastq: 1.19.1
+  '@blitzbrowser/tunnel@2.0.2': {}
 
   '@borewit/text-codec@0.1.1': {}
 

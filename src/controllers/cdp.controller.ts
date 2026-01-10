@@ -1,4 +1,3 @@
-import { Message, Tunnel } from '@blitzbrowser/tunnel';
 import { Controller, Logger, OnModuleInit } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
@@ -6,6 +5,7 @@ import { BrowserInstance, ConnectionOptionsEvent } from 'src/components/browser-
 import { BrowserPoolService } from 'src/services/browser-pool.service';
 import { WebSocketServer } from 'ws';
 import z from 'zod';
+import { Message, Tunnel } from '@blitzbrowser/tunnel';
 
 export const PROXY_URL_QUERY_PARAM = 'proxyUrl';
 export const TIMEZONE_QUERY_PARAM = 'timezone';
@@ -62,7 +62,7 @@ export class CDPController implements OnModuleInit {
         })
 
         cdp_websocket_client.on('message', message => {
-          tunnel.sendMessage(Message.of(BrowserInstance.CDP_CHANNEL_ID, message.toString('utf8')));
+          tunnel.receiveMessage(Message.of(BrowserInstance.CDP_CHANNEL_ID, message.toString('utf8')));
         });
 
         const ping_interval_id = setInterval(() => {
@@ -80,7 +80,7 @@ export class CDPController implements OnModuleInit {
 
         browser_instance.connectTunnel(tunnel);
 
-        tunnel.sendMessage(Message.of(BrowserInstance.EVENT_CHANNEL_ID, JSON.stringify({
+        tunnel.receiveMessage(Message.of(BrowserInstance.EVENT_CHANNEL_ID, JSON.stringify({
           type: 'CONNECTION_OPTIONS',
           options: {
             ...parsed_connection_options.data

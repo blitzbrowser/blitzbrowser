@@ -3,7 +3,7 @@ import { ChildProcess, spawn } from 'child_process';
 import * as ProxyChain from 'proxy-chain';
 import * as EventEmitter from 'events';
 import { WebSocket } from 'ws';
-import { TextChannel, Tunnel } from '@blitzbrowser/tunnel';
+import { Channel, Tunnel } from '@blitzbrowser/tunnel';
 import { ModuleRef } from '@nestjs/core';
 import { UserDataService } from 'src/services/user-data.service';
 import * as fsPromise from 'fs/promises';
@@ -143,8 +143,8 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
   #connection_options: ConnectionOptions | undefined;
 
   #tunnel: Tunnel;
-  #event_channel: TextChannel;
-  #cdp_channel: TextChannel;
+  #event_channel: Channel;
+  #cdp_channel: Channel;
 
   #timezone: string;
   #cdp_port: number;
@@ -182,9 +182,8 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
     this.#logger.log('Connecting tunnel.');
 
-    this.#event_channel = this.#tunnel.createTextChannel(BrowserInstance.EVENT_CHANNEL_ID, async (data) => {
-      this.#logger.log(data);
-      const event: BrowserInstanceEvent = JSON.parse(data);
+    this.#event_channel = this.#tunnel.createChannel(BrowserInstance.EVENT_CHANNEL_ID, async (data) => {
+      const event: BrowserInstanceEvent = JSON.parse(data.toString('utf8'));
 
       switch (event.type) {
         case 'CONNECTION_OPTIONS':
@@ -203,7 +202,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
     this.once('cdp_terminated', () => {
       this.#sendBrowserInstanceStatus();
-      this.#event_channel.sendText(JSON.stringify({ type: 'CDP_TERMINATED', status: this.status } satisfies CDPTerminatedEvent));
+      this.#event_channel.send(JSON.stringify({ type: 'CDP_TERMINATED', status: this.status } satisfies CDPTerminatedEvent));
       this.#logger.log('CDP terminated, will now close.')
       this.close();
     });
@@ -214,9 +213,9 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
       this.#logger.log('Released CDP port');
 
       this.#sendBrowserInstanceStatus();
-      this.#tunnel.close().catch(e => { this.#logger.error('Error while closing tunnel', e); });
+      this.#tunnel.close();
 
-      this.#logger.log('Closed websocket with router.');
+      this.#logger.log('Closed tunnel.');
     });
   }
 
@@ -296,7 +295,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
             const proxy_connection = this.#proxy_connections[connectionId];
 
             if (proxy_connection) {
-              this.#event_channel.sendText(JSON.stringify({
+              this.#event_channel.send(JSON.stringify({
                 type: 'BROWSER_INSTANCE_REQUEST',
                 url: proxy_connection.url,
                 bytes_downloaded: stats.trgRxBytes,
@@ -478,12 +477,12 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
               this.emit('cdp_terminated');
             });
 
-            this.#cdp_channel = this.#tunnel.createTextChannel(BrowserInstance.CDP_CHANNEL_ID, data => {
-              this.#cdp_websocket.send(data);
+            this.#cdp_channel = this.#tunnel.createChannel(BrowserInstance.CDP_CHANNEL_ID, data => {
+              this.#cdp_websocket.send(data.toString('utf8'), { binary: false });
             });
 
             this.#cdp_websocket.on('message', (data) => {
-              this.#cdp_channel.sendText(data.toString('utf8'));
+              this.#cdp_channel.send(data.toString('utf8'));
             });
 
             res(undefined);
@@ -515,7 +514,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
   #sendBrowserInstanceStatus() {
     if (this.#event_channel) {
-      this.#event_channel.sendText(JSON.stringify({ type: 'BROWSER_INSTANCE_STATUS', status: this.status } satisfies BrowserInstanceStatusEvent));
+      this.#event_channel.send(JSON.stringify({ type: 'BROWSER_INSTANCE_STATUS', status: this.status } satisfies BrowserInstanceStatusEvent));
     }
   }
 
