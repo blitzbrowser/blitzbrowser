@@ -1,6 +1,6 @@
 {
   "name": "@blitzbrowser/blitzbrowser",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Deploying, scaling and managing browsers at scale.",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
