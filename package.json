@@ -1,8 +1,9 @@
 {
   "name": "@blitzbrowser/blitzbrowser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deploying, scaling and managing browsers at scale.",
   "license": "Apache-2.0",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "rm -r ./dist && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

@@ -43,7 +43,7 @@ class PortPool {
 
 }
 
-export interface BrowserInstanceEvents {
+interface BrowserInstanceEvents {
   cdp_terminated: [];
   terminated: [];
 }
@@ -66,14 +66,14 @@ export interface ConnectionOptionsEvent {
 /**
  * Request to terminate the CDP.
  */
-interface CDPCloseEvent {
+export interface CDPCloseEvent {
   type: 'CDP_CLOSE';
 }
 
 /**
  * CDP connection is terminated.
  */
-interface CDPTerminatedEvent {
+export interface CDPTerminatedEvent {
   type: 'CDP_TERMINATED';
   status: BrowserInstanceStatus;
 }
@@ -81,12 +81,12 @@ interface CDPTerminatedEvent {
 /**
  * Browser instance status update
  */
-interface BrowserInstanceStatusEvent {
+export interface BrowserInstanceStatusEvent {
   type: 'BROWSER_INSTANCE_STATUS';
   status: BrowserInstanceStatus;
 }
 
-interface BrowserInstanceRequestEvent {
+export interface BrowserInstanceRequestEvent {
   type: 'BROWSER_INSTANCE_REQUEST';
   url: string;
   bytes_downloaded: number;
@@ -94,7 +94,7 @@ interface BrowserInstanceRequestEvent {
   created_at: string;
 }
 
-type BrowserInstanceEvent = ConnectionOptionsEvent | CDPCloseEvent | CDPTerminatedEvent | BrowserInstanceStatusEvent | BrowserInstanceRequestEvent;
+export type BrowserInstanceEvent = ConnectionOptionsEvent | CDPCloseEvent | CDPTerminatedEvent | BrowserInstanceStatusEvent | BrowserInstanceRequestEvent;
 
 export interface BrowserInstanceStatus {
   browser_pool: BrowserPoolStatus;

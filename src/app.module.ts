@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { S3Client } from '@aws-sdk/client-s3';
-import { PoolStatusController } from './controllers/pool-status.controller';
+import { StatusController } from './controllers/status.controller';
 import { UserDataS3Service, UserDataService } from './services/user-data.service';
 import { BrowserPoolService } from './services/browser-pool.service';
 import { TimezoneService } from './services/timezone.service';
@@ -10,7 +10,7 @@ import { CDPController } from './controllers/cdp.controller';
   imports: [],
   controllers: [
     CDPController,
-    PoolStatusController,
+    StatusController,
   ],
   providers: [
     {
