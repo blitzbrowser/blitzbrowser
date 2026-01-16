@@ -20,7 +20,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run build --if-present
+      - run: pnpm build
       - run: pnpm publish --access public --no-git-checks
       - id: package_version
         run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
