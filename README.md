@@ -1,4 +1,36 @@
-# BlitzBrowser
+<div align="center">
+  <a href="https://blitzbrowser.com/" align="center">
+    <center align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-white.png" width="300">
+        <source media="(prefers-color-scheme: light)" srcset="./assets/logo.png" width="300">
+        <img src="./assets/logo.svg" alt="Browserless logo" width="300">
+      </picture>
+    </center>
+  </a>
+  
+  <h3>Deploy and manage headful browsers in docker. Run your browsers with BlitzBrowser in the cloud or self hosted.</h3>
+
+  <div>
+    <img src="https://img.shields.io/github/actions/workflow/status/blitzbrowser/blitzbrowser/cicd.yml?style=flat-square" />
+    <img src="https://img.shields.io/github/package-json/v/blitzbrowser/blitzbrowser?style=flat-square" />
+  </div>
+</div>
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Cloud or self-hosted](#-cloud-or-self-hosted)
+- [Support](#-support)
+
+## ✨ Features
+
+- **Parallelism** - Run multiple browsers concurrently.
+- **Chrome DevTools Protocol** - Connect directly from Puppeteer, Playwright and any CDP supported frameworks. No custom library needed.
+- **User Data Storage** - Save and reuse your browsing sessions easily with S3.
+- **Proxy** - Connect your browsers to any HTTP proxy.
+- **No DevOps** - Run your browsers without worrying about the infrastructure, zombie process or a script. The container manages everything for you.
 
 ## 🚀 Quick Start
 
@@ -114,3 +146,19 @@ await browser.close();
 ```
 
 </details>
+
+## ☁️ Cloud or 💻 self-hosted
+
+The cloud and self-hosted versions offer the same features.
+
+You should use the self-hosted version if you are looking to host on your own server or to test locally. It works perfectly if you are scaling vertically. 1 server to handle multiple browsers and the S3 storage for user data.
+
+The cloud version allows you to focus on scaling your features while we handle all the infrastructure. You connect to our CDP endpoint and we will handle the scaling, the S3 storage and the proxy. No version management, no infrastructure deployment and priority support.
+
+Our proxy is available as a standalone HTTP proxy. You don't need to use our cloud version to get access to our proxies. It works with the self-hosted version and it is really cheap!
+
+## ❔Support
+
+To get support, you can contact us on [Discord](https://discord.com/invite/qZ3tCZJ2Ze) or at [support@blitzbrowser.com](support@blitzbrowser.com).
+
+We will always prioritize cloud customers.
