@@ -60,7 +60,7 @@ services:
 </details>
 
 <details>
-<summary><b>Docker Compose with Rustfs (User Data Storage)</b></summary>
+<summary><b>Docker Compose with S3 (Rustfs) for user data storage</b></summary>
 
 Before using user data storage with BlitzBrowser. You need to create the bucket `user-data` in Rustfs [http://localhost:9001](http://localhost:9001).
 
@@ -150,6 +150,17 @@ await browser.close();
 </details>
 
 ## ⚙️ Configuration
+
+### CDP Properties
+
+When connecting to a browser over CDP. You can pass properties to customize your browser.
+
+- `proxyUrl`: The HTTP proxy to use to route all the HTTP requests of the browser. By default it use the public IP of the host.
+- `timezone`: The timezone to set the browser on. By default it will check the public IP used by the browser and use the timezone associated to it.
+- `userDataId`: The ID of the user data to use when browsing and to save after. If no user data id, the browsing session won't be saved. It is required to use S3 to store the user data.
+- `userDataReadOnly`: The ID of the user data to use when browsing. The user data won't be saved after the browser is closed.
+
+You use them like this: `ws://localhost:9999?proxyUrl=http://proxy.com&userDataId=123` when connecting to a browser.
 
 ### Environment Variables
 
