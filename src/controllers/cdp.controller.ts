@@ -6,6 +6,7 @@ import { BrowserPoolService } from 'src/services/browser-pool.service';
 import { WebSocketServer } from 'ws';
 import z from 'zod';
 import { Message, Tunnel } from '@blitzbrowser/tunnel';
+import { MaxBrowserReachedError } from 'src/errors/max-browser-reached.error';
 
 export const PROXY_URL_QUERY_PARAM = 'proxyUrl';
 export const TIMEZONE_QUERY_PARAM = 'timezone';
@@ -24,8 +25,11 @@ type ConnectionOptionQueryParams = z.infer<typeof ConnectionOptionQueryParams>;
 @Controller()
 export class CDPController implements OnModuleInit {
 
+  private static readonly WAITING_BROWSER_TIMEOUT_MS = 10_000;
+
   static readonly INTERNAL_SERVER_ERROR_CODE = 4000;
   static readonly BAD_REQUEST_CODE = 4002;
+  static readonly NO_BROWSER_INSTANCE_AVAILABLE = 4003;
 
   readonly #logger = new Logger(CDPController.name);
 
@@ -37,7 +41,9 @@ export class CDPController implements OnModuleInit {
   async onModuleInit() {
     const websocket_server = new WebSocketServer({ server: (this.http_adapter_host.httpAdapter as ExpressAdapter).getHttpServer() });
 
-    websocket_server.on('connection', (cdp_websocket_client, req) => {
+    websocket_server.on('connection', async (cdp_websocket_client, req) => {
+      let tunnel: Tunnel;
+
       try {
         const url = new URL(`http://127.0.0.1${req.url}`);
         const parsed_connection_options = this.#parseConnectionOptionQueryParams(url);
@@ -47,9 +53,7 @@ export class CDPController implements OnModuleInit {
           return;
         }
 
-        const browser_instance = this.browser_pool_service.createBrowserInstance();
-
-        const tunnel = new Tunnel();
+        tunnel = new Tunnel();
 
         tunnel.on('message', message => {
           if (message.channel_id === BrowserInstance.CDP_CHANNEL_ID) {
@@ -64,6 +68,8 @@ export class CDPController implements OnModuleInit {
         cdp_websocket_client.on('message', message => {
           tunnel.receiveMessage(Message.of(BrowserInstance.CDP_CHANNEL_ID, message.toString('utf8')));
         });
+
+        const browser_instance: BrowserInstance = await this.#getBrowserInstance();
 
         const ping_interval_id = setInterval(() => {
           cdp_websocket_client.ping();
@@ -89,6 +95,12 @@ export class CDPController implements OnModuleInit {
 
         this.#logger.log('Sent connection options');
       } catch (e) {
+        if (e instanceof MaxBrowserReachedError) {
+          tunnel.close();
+          cdp_websocket_client.close(CDPController.NO_BROWSER_INSTANCE_AVAILABLE, 'No browser instance available.');
+          return;
+        }
+
         this.#logger.error(`Error while handling client websocket.`, e?.stack || e)
 
         cdp_websocket_client.close(CDPController.INTERNAL_SERVER_ERROR_CODE, e?.stack || e);
@@ -104,6 +116,31 @@ export class CDPController implements OnModuleInit {
       this.#logger.error('Error with server websocket.', err?.stack || err);
       this.browser_pool_service.shutdown();
     });
+  }
+
+  async #getBrowserInstance(): Promise<BrowserInstance> {
+    const start = Date.now();
+
+    while (start + CDPController.WAITING_BROWSER_TIMEOUT_MS > Date.now()) {
+      try {
+        const browser_instance = this.browser_pool_service.createBrowserInstance();
+
+        if (browser_instance) {
+          return browser_instance;
+        }
+      } catch (e) {
+        if (e instanceof MaxBrowserReachedError) {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 100);
+          });
+          continue;
+        } else {
+          throw e;
+        }
+      }
+    }
+
+    throw new MaxBrowserReachedError();
   }
 
   #parseConnectionOptionQueryParams(url: URL) {

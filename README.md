@@ -31,6 +31,7 @@
 - **Chrome DevTools Protocol** - Connect directly from Puppeteer, Playwright and any CDP supported frameworks. No custom library needed.
 - **User Data Storage** - Save and reuse your browsing sessions easily with S3.
 - **Proxy** - Connect your browsers to any HTTP proxy.
+- **Queueing** - The CDP connections are queued while the browsers are starting.
 - **No DevOps** - Run your browsers without worrying about the infrastructure, zombie process or a script. The container manages everything for you.
 
 ## 🚀 Quick Start

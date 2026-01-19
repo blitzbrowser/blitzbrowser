@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { BrowserInstance } from 'src/components/browser-instance.component';
 import * as EventEmitter from 'events';
 import { ModuleRef } from '@nestjs/core';
+import { MaxBrowserReachedError } from 'src/errors/max-browser-reached.error';
 
 type PoolServiceEvents = {
   browser_instance_created: [BrowserInstance];
@@ -92,7 +93,7 @@ export class BrowserPoolService extends EventEmitter<PoolServiceEvents> implemen
     }
 
     if(this.#browser_instances.size === this.max_browser_instances) {
-      throw 'Max browser reached.';
+      throw new MaxBrowserReachedError();
     }
 
     const browser_instance = new BrowserInstance(id, this.module_ref);
