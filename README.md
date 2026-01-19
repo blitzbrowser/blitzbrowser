@@ -21,7 +21,8 @@
 
 - [Features](#-features)
 - [Quick Start](#-quick-start)
-- [Cloud or self-hosted](#%EF%B8%8F-cloud-or--self-hosted)
+- [Configuration](#️-configuration)
+- [Cloud or self-hosted](#️-cloud-or--self-hosted)
 - [Support](#support)
 
 ## ✨ Features
@@ -146,6 +147,18 @@ await browser.close();
 ```
 
 </details>
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+- `PORT`: The HTTP port of the web server. The default port is `9999`.
+- `MAX_BROWSER_INSTANCES`: The maximum number of browsers the instance can run concurrently. The default value is `99`.
+- `S3_ENDPOINT`: The endpoint of the S3 server to use for storage.
+- `S3_ACCESS_KEY_ID`: Access key ID to connect to the S3 server.
+- `S3_SECRET_ACCESS_KEY`: Secret access key to connect to the S3 server.
+- `S3_USER_DATA_BUCKET`: The S3 bucket to store the user data.
+- `TAGS`: The tags used to identify the pool of browsers. No tags by default. The tags are in the following format `a=1,b=2,c=3`.
 
 ## ☁️ Cloud or 💻 self-hosted
 

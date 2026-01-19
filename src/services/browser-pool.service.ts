@@ -23,7 +23,7 @@ export class BrowserPoolService extends EventEmitter<PoolServiceEvents> implemen
   readonly #started_at = new Date().toISOString();
   readonly #tags: { [key: string]: string; } = {};
 
-  readonly max_browser_instances = parseInt(process.env.MAX_BROWSER_INSTANCES);
+  readonly max_browser_instances = parseInt(process.env.MAX_BROWSER_INSTANCES || '99');
 
   readonly #browser_instances = new Map<string, BrowserInstance>();
 
@@ -89,6 +89,10 @@ export class BrowserPoolService extends EventEmitter<PoolServiceEvents> implemen
     if (this.sigterm_received) {
       this.logger.log(`Can't create new browser instance. Sigterm has been received.`);
       return;
+    }
+
+    if(this.#browser_instances.size === this.max_browser_instances) {
+      throw 'Max browser reached.';
     }
 
     const browser_instance = new BrowserInstance(id, this.module_ref);
