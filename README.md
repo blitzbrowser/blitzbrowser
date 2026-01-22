@@ -13,7 +13,7 @@
 
   <div>
     <img src="https://img.shields.io/github/actions/workflow/status/blitzbrowser/blitzbrowser/cicd.yml?style=flat-square" />
-    <img src="https://img.shields.io/github/package-json/v/blitzbrowser/blitzbrowser?style=flat-square" />
+    <img src="https://img.shields.io/github/v/tag/blitzbrowser/blitzbrowser?style=flat-square" />
   </div>
 </div>
 

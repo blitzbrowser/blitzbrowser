@@ -100,14 +100,14 @@ export class BrowserPoolService extends EventEmitter<PoolServiceEvents> implemen
 
     this.logger.log(`Created browser instance ${browser_instance.id}.`);
 
-    this.emit('browser_instance_created', browser_instance);
-
     browser_instance.on('terminated', () => {
       this.logger.log(`Browser instance ${browser_instance.id} terminated. Removing from pool.`);
       this.#browser_instances.delete(browser_instance.id);
     });
 
     this.#browser_instances.set(browser_instance.id, browser_instance);
+
+    this.emit('browser_instance_created', browser_instance);
 
     return browser_instance;
   }
