@@ -155,6 +155,8 @@ await browser.close();
 
 ## ⚙️ Configuration
 
+The developer documentation is available at [https://docs.blitzbrowser.com/](https://docs.blitzbrowser.com/).
+
 ### CDP Properties
 
 When connecting to a browser over CDP. You can pass properties to customize your browser.
