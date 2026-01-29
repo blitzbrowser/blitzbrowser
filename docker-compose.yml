@@ -4,6 +4,7 @@ services:
       context: . 
       dockerfile: Dockerfile
     ports:
+      - "5900:5900"
       - "9999:9999"
     environment:
       S3_ENDPOINT: http://s3:9000

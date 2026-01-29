@@ -7,12 +7,15 @@ let SIGTERM_RECEIVED = false;
 
 class BrowserInstanceProcess {
 
+    readonly #display_id = parseInt(process.env.DISPLAY_ID);
     readonly #cdp_port = parseInt(process.env.CDP_PORT);
     readonly #proxy_server_port = parseInt(process.env.PROXY_SERVER_PORT);
     readonly #timezone = process.env.TZ;
     readonly #user_data_folder = process.env.USER_DATA_FOLDER;
 
     #xvfb_process: ChildProcess;
+    #x11vnc_process: ChildProcess;
+    #fluxbox_process: ChildProcess;
     #puppeteer_process: Browser;
 
     #is_closing = false;
@@ -32,15 +35,18 @@ class BrowserInstanceProcess {
         console.log('Launching');
 
         try {
-            const display_id = this.#cdp_port; // We use the port to guarantee only one instance has this screen
+            const display_id = this.#display_id;
             const display = `:${display_id}`;
-            const display_lock_file = `/tmp/.X${display_id}-lock`;
 
             // When container is restarting, xvfb locks are not always released on file system.
-            await fsPromise.rm(display_lock_file, { force: true });
+            await fsPromise.rm(`/tmp/.X${display_id}-lock`, { force: true });
 
             console.log('Creating xvfb process');
-            this.#xvfb_process = spawn('Xvfb', [display, '-screen', '0', '1920x1080x24'], { stdio: 'inherit' });
+            this.#xvfb_process = spawn('Xvfb', [display, '-screen', '0', '1920x1080x16']);
+            await new Promise((resolve) => {
+                setTimeout(resolve, 1000);
+            });
+            this.#fluxbox_process = spawn('fluxbox', ['-display', display], { stdio: 'inherit' });;
 
             console.log('Creating puppeteer process');
             this.#puppeteer_process = await puppeteer.launch({
@@ -78,6 +84,9 @@ class BrowserInstanceProcess {
                     TZ: this.#timezone
                 },
             });
+
+            this.#x11vnc_process = spawn('x11vnc', ['-display', display, '-nopw', '-listen', '0.0.0.0', '-forever', '-shared', '-noxdamage', '-ncache', '-verbose'], { stdio: 'inherit' });
+
             console.log('Created puppeteer process.');
 
             this.#puppeteer_process.on('disconnected', () => {
@@ -132,6 +141,22 @@ class BrowserInstanceProcess {
                 await this.#waitGoogleChromeKilled();
             } catch (e) {
                 console.error('Error while killing puppeteer', e?.stack);
+            }
+        }
+
+        if (this.#x11vnc_process) {
+            try {
+                this.#x11vnc_process.kill();
+            } catch (e) {
+                console.error('Error while killing x11vnc process', e?.stack);
+            }
+        }
+
+        if (this.#fluxbox_process) {
+            try {
+                this.#fluxbox_process.kill();
+            } catch (e) {
+                console.error('Error while killing fluxbox process', e?.stack);
             }
         }
 

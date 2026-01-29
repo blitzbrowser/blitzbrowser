@@ -406,6 +406,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
         stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
         env: {
           ...process.env,
+          DISPLAY_ID: `${this.#cdp_port}`,
           CDP_PORT: `${this.#cdp_port}`,
           PROXY_SERVER_PORT: `${this.#proxy_server.port}`,
           USER_DATA_FOLDER: this.#user_data_folder,
