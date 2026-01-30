@@ -97,6 +97,8 @@ export interface BrowserInstanceRequestEvent {
 export type BrowserInstanceEvent = ConnectionOptionsEvent | CDPCloseEvent | CDPTerminatedEvent | BrowserInstanceStatusEvent | BrowserInstanceRequestEvent;
 
 export interface BrowserInstanceStatus {
+  id: string;
+
   browser_pool: BrowserPoolStatus;
 
   // Order of events that should happen in happy path
@@ -511,6 +513,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
   get status() {
     return {
+      id: this.id,
       browser_pool: this.#browser_pool_service.status,
       connected_at: this.#connected_at,
       preparation_tasks_started_at: this.#preparation_tasks_started_at,
