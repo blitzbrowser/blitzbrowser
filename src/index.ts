@@ -3,8 +3,9 @@ import { StatusController } from './controllers/status.controller';
 import { UserDataService } from './services/user-data.service';
 import { BrowserPoolService, BrowserPoolStatus } from './services/browser-pool.service';
 import { TimezoneService } from './services/timezone.service';
-import { CDPController } from './controllers/cdp.controller';
+import { CDPWebSocketGateway } from './gateways/cdp.gateway';
 import LimitStream from "./transforms/limit-stream";
+import { VNCWebSocketGateway } from "./gateways/vnc.gateway";
 
 export {
     ConnectionOptions,
@@ -21,6 +22,7 @@ export {
     BrowserPoolStatus,
     BrowserPoolService,
     TimezoneService,
-    CDPController,
+    CDPWebSocketGateway as CDPController,
+    VNCWebSocketGateway as VNCController,
     LimitStream
 };

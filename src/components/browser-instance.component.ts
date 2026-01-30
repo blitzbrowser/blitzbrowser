@@ -117,7 +117,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
   static readonly CDP_CHANNEL_ID = 2;
   static readonly EVENT_CHANNEL_ID = 3;
 
-  static #CDP_PORT_POOL = new PortPool(13000);
+  static #PORT_POOL = new PortPool(13000);
 
   readonly #logger: Logger;
 
@@ -147,7 +147,9 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
   #cdp_channel: Channel;
 
   #timezone: string;
+
   #cdp_port: number;
+  #vnc_port: number;
 
   constructor(
     readonly id: string,
@@ -157,6 +159,10 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
     this.#browser_pool_service = this.module_ref.get(BrowserPoolService);
     this.#logger = new Logger(`${BrowserInstance.name}|${id}`);
     this.#user_data_folder = `/home/pptruser/user-data/${id}`;
+  }
+
+  get vnc_port() {
+    return this.#vnc_port;
   }
 
   get in_use() {
@@ -209,8 +215,10 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
     this.once('terminated', () => {
       // Release after terminated. We need to make sure the browser process is killed before reusing the port. Preventing collision.
-      BrowserInstance.#CDP_PORT_POOL.releasePort(this.#cdp_port);
-      this.#logger.log('Released CDP port');
+      BrowserInstance.#PORT_POOL.releasePort(this.#cdp_port);
+      BrowserInstance.#PORT_POOL.releasePort(this.#vnc_port);
+
+      this.#logger.log('Released ports');
 
       this.#sendBrowserInstanceStatus();
       this.#tunnel.close();
@@ -227,7 +235,8 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
 
       await fsPromise.mkdir(this.#user_data_folder, { recursive: true });
 
-      this.#cdp_port = BrowserInstance.#CDP_PORT_POOL.getAvailablePort();
+      this.#cdp_port = BrowserInstance.#PORT_POOL.getAvailablePort();
+      this.#vnc_port = BrowserInstance.#PORT_POOL.getAvailablePort();
 
       await Promise.all([
         this.#startProxyServer(),
@@ -408,6 +417,7 @@ export class BrowserInstance extends EventEmitter<BrowserInstanceEvents> {
           ...process.env,
           DISPLAY_ID: `${this.#cdp_port}`,
           CDP_PORT: `${this.#cdp_port}`,
+          VNC_PORT: `${this.#vnc_port}`,
           PROXY_SERVER_PORT: `${this.#proxy_server.port}`,
           USER_DATA_FOLDER: this.#user_data_folder,
           TZ: this.#timezone

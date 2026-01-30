@@ -9,6 +9,7 @@ class BrowserInstanceProcess {
 
     readonly #display_id = parseInt(process.env.DISPLAY_ID);
     readonly #cdp_port = parseInt(process.env.CDP_PORT);
+    readonly #vnc_port = parseInt(process.env.VNC_PORT);
     readonly #proxy_server_port = parseInt(process.env.PROXY_SERVER_PORT);
     readonly #timezone = process.env.TZ;
     readonly #user_data_folder = process.env.USER_DATA_FOLDER;
@@ -43,9 +44,9 @@ class BrowserInstanceProcess {
 
             console.log('Creating xvfb process');
             this.#xvfb_process = spawn('Xvfb', [display, '-screen', '0', '1920x1080x16']);
-            await new Promise((resolve) => {
-                setTimeout(resolve, 1000);
-            });
+
+            await new Promise((resolve) => { setTimeout(resolve, 100); });
+
             this.#fluxbox_process = spawn('fluxbox', ['-display', display], { stdio: 'inherit' });;
 
             console.log('Creating puppeteer process');
@@ -85,7 +86,7 @@ class BrowserInstanceProcess {
                 },
             });
 
-            this.#x11vnc_process = spawn('x11vnc', ['-display', display, '-nopw', '-listen', '0.0.0.0', '-forever', '-shared', '-noxdamage', '-ncache', '-nap', '-wait', '50', '-verbose'], { stdio: 'inherit' });
+            this.#x11vnc_process = spawn('x11vnc', ['-display', display, '-nopw', '-listen', '0.0.0.0', '-rfbport', `${this.#vnc_port}`, '-forever', '-shared', '-noxdamage', '-ncache', '0', '-nap', '-wait', '50', '-verbose'], { stdio: 'inherit' });
 
             console.log('Created puppeteer process.');
 

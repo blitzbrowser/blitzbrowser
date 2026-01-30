@@ -4,7 +4,10 @@ import { StatusController } from './controllers/status.controller';
 import { UserDataService } from './services/user-data.service';
 import { BrowserPoolService } from './services/browser-pool.service';
 import { TimezoneService } from './services/timezone.service';
-import { CDPController } from './controllers/cdp.controller';
+import { CDPWebSocketGateway } from './gateways/cdp.gateway';
+import { VNCWebSocketGateway } from './gateways/vnc.gateway';
+import { WebSocketGateway } from './gateways/websocket.gateway';
+import { BrowserInstanceWebSocketGateway } from './gateways/browser-instance.gateway';
 
 const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S3_')).length === 0 ? [] : [
   {
@@ -28,13 +31,18 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
 @Module({
   imports: [],
   controllers: [
-    CDPController,
     StatusController,
   ],
   providers: [
+    WebSocketGateway,
+    CDPWebSocketGateway,
+    VNCWebSocketGateway,
+    BrowserInstanceWebSocketGateway,
+
     ...USER_DATA_PROVIDERS,
+    
+    TimezoneService,
     BrowserPoolService,
-    TimezoneService
   ],
 })
 export class AppModule { }
