@@ -1,34 +1,51 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+  import { page } from '$app/state';
+  import { browser_store } from '$lib/browsers.svelte';
   import * as Card from '$lib/components/ui/card';
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy } from 'svelte';
 
-  $: vnc_url = `ws://localhost:9999/browser-instances/${$page.params.browser_instance_id}/vnc`;
+  let browser = $derived(
+    browser_store.browsers.get(page.params.browser_instance_id || ''),
+  );
 
-  let canvasContainer: HTMLElement;
+  let vnc_url = $derived(
+    `ws://localhost:9999/browser-instances/${page.params.browser_instance_id}/vnc`,
+  );
+  let vnc_connection_status: 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED' =
+    $state('DISCONNECTED');
+
   let rfb: any;
-  let status = 'Connecting...';
+  let rfb_container: HTMLElement;
 
-  onMount(async () => {
-    // @ts-ignore
-    const { default: RFB } = await import('@novnc/novnc');
+  $effect(() => {
+    if (rfb) {
+      rfb.disconnect();
+      rfb = undefined;
+    }
 
-    try {
-      rfb = new RFB(canvasContainer, vnc_url);
+    if (browser) {
+      (async () => {
+        // @ts-ignore
+        const { default: RFB } = await import('@novnc/novnc');
 
-      // Add event listeners for feedback
-      rfb.addEventListener('connect', () => {
-        status = 'Connected';
-        rfb.viewOnly = false; // Set to true if you want read-only
-        rfb.scaleViewport = true; // Auto-scale to fit container
-      });
+        try {
+          rfb = new RFB(rfb_container, vnc_url);
 
-      rfb.addEventListener('disconnect', (e: any) => {
-        status = e.detail.clean ? 'Disconnected' : 'Connection Error';
-      });
-    } catch (err) {
-      console.error('noVNC initialization failed:', err);
-      status = 'Failed to initialize';
+          rfb.addEventListener('connect', () => {
+            vnc_connection_status = 'CONNECTED';
+            rfb.viewOnly = false;
+            rfb.scaleViewport = true;
+          });
+
+          rfb.addEventListener('disconnect', (e: any) => {
+            vnc_connection_status = 'DISCONNECTED';
+          });
+
+          vnc_connection_status = 'CONNECTING';
+        } catch (err) {
+          console.error('noVNC initialization failed:', err);
+        }
+      })();
     }
   });
 
@@ -44,31 +61,44 @@
     <Card.Title>
       <div class="flex flex-row items-center gap-3">
         <span class="relative flex size-3">
-          <span
-            class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
-          >
-          </span>
-          <span class="relative inline-flex size-3 rounded-full bg-green-500">
-          </span>
+          {#if vnc_connection_status === 'CONNECTED'}
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
+            >
+            </span>
+            <span class="relative inline-flex size-3 rounded-full bg-green-500">
+            </span>
+          {:else if vnc_connection_status === 'CONNECTING'}
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-yellow-400 opacity-75"
+            >
+            </span>
+            <span
+              class="relative inline-flex size-3 rounded-full bg-yellow-500"
+            >
+            </span>
+          {:else}
+            <span class="relative inline-flex size-3 rounded-full bg-red-500">
+            </span>
+          {/if}
         </span>
         Live View
       </div>
     </Card.Title>
-    <Card.Description>Click, type and scroll directly in the browser.</Card.Description
-    >
+    <Card.Description>Live view of the browser.</Card.Description>
   </Card.Header>
   <Card.Content>
-    <div class="vnc-wrapper rounded">
-      <div bind:this={canvasContainer} class=" rounded overflow-hidden"></div>
+    <div
+      class="relative flex flex-row justify-center aspect-video max-w-full w-full max-h-[75vh] rounded bg-gray-100 dark:bg-neutral-800"
+    >
+      <div bind:this={rfb_container} class="rounded overflow-hidden"></div>
+      {#if !browser}
+        <div
+          class="absolute flex flex-row justify-center items-center w-full h-full"
+        >
+          <span>Browser closed.</span>
+        </div>
+      {/if}
     </div>
   </Card.Content>
 </Card.Root>
-
-<style>
-  .vnc-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 75vh;
-  }
-</style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Laptop from '@lucide/svelte/icons/laptop';
+  import Monitor from '@lucide/svelte/icons/monitor';
   import SunIcon from '@lucide/svelte/icons/sun';
   import MoonIcon from '@lucide/svelte/icons/moon';
   import BookOpenText from '@lucide/svelte/icons/book-open-text';
@@ -43,7 +43,7 @@
         {
           title: 'Browsers',
           url: '/',
-          icon: Laptop,
+          icon: Monitor,
         },
       ]}
     />

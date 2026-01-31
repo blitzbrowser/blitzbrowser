@@ -8,6 +8,7 @@ import { CDPWebSocketGateway } from './gateways/cdp.gateway';
 import { VNCWebSocketGateway } from './gateways/vnc.gateway';
 import { WebSocketGateway } from './gateways/websocket.gateway';
 import { BrowserInstanceWebSocketGateway } from './gateways/browser-instance.gateway';
+import { BrowserPoolController } from './controllers/browser-pool.controller';
 
 const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S3_')).length === 0 ? [] : [
   {
@@ -32,6 +33,7 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
   imports: [],
   controllers: [
     StatusController,
+    BrowserPoolController,
   ],
   providers: [
     WebSocketGateway,

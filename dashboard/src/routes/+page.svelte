@@ -1,44 +1,77 @@
 <script lang="ts">
   import { browser_store } from '$lib/browsers.svelte';
   import Button from '$lib/components/ui/button/button.svelte';
+  import Video from '@lucide/svelte/icons/video';
   import * as Card from '$lib/components/ui/card';
+  import * as Table from '$lib/components/ui/table';
 </script>
 
-      <h1 class="font-extrabold text-4xl">Browsers</h1>
-      {#if browser_store.browsers.length === 0}
-        <Card.Root>
-          <Card.Content>
-            <span>
-              No browser running. <a
-                class="text-yellow-400 underline"
-                href="https://docs.blitzbrowser.com/self-hosted/getting-started#connect-your-code"
-                target="_blank">Connect your code to start running</a
-              >.
-            </span>
-          </Card.Content>
-        </Card.Root>
-      {/if}
-      {#each browser_store.browsers as browser}
-        <Card.Root>
-          <Card.Content class="flex flex-row justify-between items-center">
-            <div class="flex flex-row items-center gap-4">
-              <span class="relative flex size-3">
-                <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
-                >
+<Card.Root>
+  <Card.Header>
+    <Card.Title class="text-2xl">Browsers</Card.Title>
+    <Card.Description>Running browsers and available slots</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <Table.Root class="border">
+      <Table.Header>
+        <Table.Row>
+          <Table.Head class="w-36">Status</Table.Head>
+          <Table.Head>Id</Table.Head>
+          <Table.Head class="text-end">Actions</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {#each browser_store.browsers.values() as browser (browser.id)}
+          <Table.Row>
+            <Table.Cell>
+              <div class="flex flex-row items-center gap-2">
+                <span class="relative flex size-3">
+                  <span
+                    class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
+                  >
+                  </span>
+                  <span
+                    class="relative inline-flex size-3 rounded-full bg-green-500"
+                  >
+                  </span>
                 </span>
-                <span
-                  class="relative inline-flex size-3 rounded-full bg-green-500"
-                >
-                </span>
-              </span>
-              {browser.id}
-            </div>
-            <div>
+                Running
+              </div>
+            </Table.Cell>
+            <Table.Cell>{browser.id}</Table.Cell>
+            <Table.Cell class="text-end">
               <a href={`/browsers/${browser.id}/live-view`}>
-                <Button class="cursor-pointer" size="sm">Live View</Button>
+                <Button variant="outline" class="cursor-pointer" size="sm">
+                  <Video />
+                  Live View
+                </Button>
               </a>
-            </div>
-          </Card.Content>
-        </Card.Root>
-      {/each}
+            </Table.Cell>
+          </Table.Row>
+        {/each}
+        {#each { length: (browser_store.browser_pool?.max_browser_instances || 0) - browser_store.browsers.size } as _, i}
+          <Table.Row>
+            <Table.Cell>
+              <div class="flex flex-row items-center gap-2">
+                <span class="relative flex size-3">
+                  <span
+                    class="absolute inline-flex h-full w-full animate-ping rounded-full bg-neutral-400 opacity-75"
+                  >
+                  </span>
+                  <span
+                    class="relative inline-flex size-3 rounded-full bg-neutral-400"
+                  >
+                  </span>
+                </span>
+                Idle
+              </div>
+            </Table.Cell>
+            <Table.Cell>-</Table.Cell>
+            <Table.Cell class="text-end">
+            </Table.Cell>
+          </Table.Row>
+        {/each}
+      </Table.Body>
+    </Table.Root>
+  </Card.Content>
+</Card.Root>
