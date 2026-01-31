@@ -4,7 +4,12 @@ import { StatusController } from './controllers/status.controller';
 import { UserDataService } from './services/user-data.service';
 import { BrowserPoolService } from './services/browser-pool.service';
 import { TimezoneService } from './services/timezone.service';
-import { CDPController } from './controllers/cdp.controller';
+import { CDPWebSocketGateway } from './gateways/cdp.gateway';
+import { VNCWebSocketGateway } from './gateways/vnc.gateway';
+import { WebSocketGateway } from './gateways/websocket.gateway';
+import { BrowserInstanceWebSocketGateway } from './gateways/browser-instance.gateway';
+import { BrowserPoolController } from './controllers/browser-pool.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S3_')).length === 0 ? [] : [
   {
@@ -26,15 +31,23 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
 ]
 
 @Module({
-  imports: [],
+  imports: [
+    ScheduleModule.forRoot()
+  ],
   controllers: [
-    CDPController,
     StatusController,
+    BrowserPoolController,
   ],
   providers: [
+    WebSocketGateway,
+    CDPWebSocketGateway,
+    VNCWebSocketGateway,
+    BrowserInstanceWebSocketGateway,
+
     ...USER_DATA_PROVIDERS,
+
+    TimezoneService,
     BrowserPoolService,
-    TimezoneService
   ],
 })
 export class AppModule { }
