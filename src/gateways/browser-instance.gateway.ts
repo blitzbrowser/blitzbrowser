@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Interval } from "@nestjs/schedule";
 import { BrowserPoolService } from "src/services/browser-pool.service";
 import { WebSocket } from "ws";
 
@@ -23,6 +24,11 @@ export class BrowserInstanceWebSocketGateway implements OnModuleInit {
 
             this.#sendBrowserInstancesStatus();
         });
+    }
+
+    @Interval(3000)
+    updateBrowserInstancesStatus() {
+        this.#sendBrowserInstancesStatus();
     }
 
     connectBrowserInstancesEvents(websocket_client: WebSocket) {

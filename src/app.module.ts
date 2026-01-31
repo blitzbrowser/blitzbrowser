@@ -9,6 +9,7 @@ import { VNCWebSocketGateway } from './gateways/vnc.gateway';
 import { WebSocketGateway } from './gateways/websocket.gateway';
 import { BrowserInstanceWebSocketGateway } from './gateways/browser-instance.gateway';
 import { BrowserPoolController } from './controllers/browser-pool.controller';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S3_')).length === 0 ? [] : [
   {
@@ -30,7 +31,9 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
 ]
 
 @Module({
-  imports: [],
+  imports: [
+    ScheduleModule.forRoot()
+  ],
   controllers: [
     StatusController,
     BrowserPoolController,
@@ -42,7 +45,7 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
     BrowserInstanceWebSocketGateway,
 
     ...USER_DATA_PROVIDERS,
-    
+
     TimezoneService,
     BrowserPoolService,
   ],

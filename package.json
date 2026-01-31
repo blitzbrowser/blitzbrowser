@@ -18,6 +18,7 @@
     "@nestjs/common": "^11.1.12",
     "@nestjs/core": "^11.1.12",
     "@nestjs/platform-express": "^11.1.12",
+    "@nestjs/schedule": "^6.1.0",
     "axios": "^1.12.2",
     "proxy-chain": "^2.5.9",
     "puppeteer": "^24.6.0",

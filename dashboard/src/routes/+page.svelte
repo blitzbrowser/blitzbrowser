@@ -4,6 +4,7 @@
   import Video from '@lucide/svelte/icons/video';
   import * as Card from '$lib/components/ui/card';
   import * as Table from '$lib/components/ui/table';
+  import { DateTime } from 'luxon';
 </script>
 
 <Card.Root>
@@ -17,6 +18,7 @@
         <Table.Row>
           <Table.Head class="w-36">Status</Table.Head>
           <Table.Head>Id</Table.Head>
+          <Table.Head>Duration</Table.Head>
           <Table.Head class="text-end">Actions</Table.Head>
         </Table.Row>
       </Table.Header>
@@ -39,6 +41,7 @@
               </div>
             </Table.Cell>
             <Table.Cell>{browser.id}</Table.Cell>
+            <Table.Cell>{browser.connected_at ? DateTime.fromISO(browser.connected_at).diffNow() : '-'}</Table.Cell>
             <Table.Cell class="text-end">
               <a href={`/browsers/${browser.id}/live-view`}>
                 <Button variant="outline" class="cursor-pointer" size="sm">
@@ -67,8 +70,8 @@
               </div>
             </Table.Cell>
             <Table.Cell>-</Table.Cell>
-            <Table.Cell class="text-end">
-            </Table.Cell>
+            <Table.Cell>-</Table.Cell>
+            <Table.Cell class="text-end"></Table.Cell>
           </Table.Row>
         {/each}
       </Table.Body>

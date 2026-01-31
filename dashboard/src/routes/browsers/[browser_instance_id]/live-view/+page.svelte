@@ -91,7 +91,7 @@
     <div
       class="relative flex flex-row justify-center aspect-video max-w-full w-full max-h-[75vh] rounded bg-gray-100 dark:bg-neutral-800"
     >
-      <div bind:this={rfb_container} class="rounded overflow-hidden"></div>
+      <div bind:this={rfb_container}></div>
       {#if !browser}
         <div
           class="absolute flex flex-row justify-center items-center w-full h-full"
