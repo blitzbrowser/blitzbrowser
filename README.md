@@ -29,6 +29,7 @@ Connect to headful browsers from Puppeteer, Playwright and any CDP frameworks. P
 
 - [Features](#features)
 - [Quick Start](#quick-start)
+- [Configuration](#configuration)
 - [Support](#support)
 
 ## Features
@@ -156,7 +157,11 @@ await browser.close();
 
 </details>
 
-### Configuration
+## Configuration
+
+The developer documentation is available at [https://docs.blitzbrowser.com](https://docs.blitzbrowser.com).
+
+### Quick Links
 
 - [Getting Started](https://docs.blitzbrowser.com/self-hosted/getting-started)
 - [Persist the user data with S3](https://docs.blitzbrowser.com/self-hosted/user-data-storage)
