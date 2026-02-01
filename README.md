@@ -21,6 +21,12 @@
 
 ---
 
+<div align="center">
+  <video height="300px" src="./assets/live-view.mp4"></video>
+</div>
+
+<br />
+
 Managing browsers can be a recipe for memory leaks, zombie processes and devops issues. BlitzBrowser handles all the hard work of deploying and scaling the browsers, so you can focus on your code.
 
 Connect to headful browsers from Puppeteer, Playwright and any CDP frameworks. Persist your user data with S3 and connect to HTTP proxies.
