@@ -39,6 +39,7 @@ Connect to headful browsers from Puppeteer, Playwright and any CDP frameworks. P
 - **Parallelism** - Spin up and run multiple browsers concurrently.
 - **Chrome DevTools Protocol** - No proprietary SDK. Connect directly from Puppeteer, Playwright or any CDP supported framework.
 - **Headful** - Run the browsers with a GUI to bypass bot detection and to render exactly as a user would see.
+- **Live View** - Watch and interact directly with any browsers currently running.
 - **Persistent Sessions** - Persist your browser user data with S3.
 - **Proxy Support** - Connect your browsers to any HTTP proxies.
 - **Queueing** - CDP connections are automatically queued while the browser are starting.
