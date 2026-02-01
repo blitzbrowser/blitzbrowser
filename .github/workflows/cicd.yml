@@ -24,7 +24,7 @@ jobs:
       # - run: pnpm build
       # - run: pnpm publish --access public --no-git-checks
       - id: package_version
-        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(node -p "require('./blitzbrowser/package.json').version")" >> $GITHUB_OUTPUT
   build-docker-images:
     runs-on: ubuntu-latest
     needs: create-tag
@@ -58,7 +58,7 @@ jobs:
       # - run: pnpm build
       # - run: pnpm publish --access public --no-git-checks
       - id: package_version
-        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(node -p "require('./blitzbrowser/package.json').version")" >> $GITHUB_OUTPUT
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
