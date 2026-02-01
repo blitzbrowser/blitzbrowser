@@ -1,7 +1,7 @@
 services:
   blitzbrowser:
     build:
-      context: . 
+      context: ./blitzbrowser 
       dockerfile: Dockerfile
     ports:
       - "9999:9999"
