@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://blitzbrowser.com/" align="center">
+  <a href="https://docs.blitzbrowser.com/" align="center">
     <center align="center">
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="./assets/logo-white.png" width="300">
@@ -10,6 +10,8 @@
   </a>
   
   <h3>Deploy and manage headful browsers in docker.</h3>
+  
+  <a href="https://docs.blitzbrowser.com/">https://docs.blitzbrowser.com</a>
 
   <div>
     <img src="https://img.shields.io/github/actions/workflow/status/blitzbrowser/blitzbrowser/cicd.yml?style=flat-square" />
@@ -27,8 +29,6 @@ Connect to headful browsers from Puppeteer, Playwright and any CDP frameworks. P
 
 - [Features](#features)
 - [Quick Start](#quick-start)
-- [Configuration](#️configuration)
-- [Cloud or self-hosted](#️cloud-or-self-hosted)
 - [Support](#support)
 
 ## Features
@@ -156,40 +156,11 @@ await browser.close();
 
 </details>
 
-## Configuration
+### Configuration
 
-The developer documentation is available at [https://docs.blitzbrowser.com/](https://docs.blitzbrowser.com/).
-
-### CDP Properties
-
-When connecting to a browser over CDP. You can pass properties to customize your browser.
-
-- `proxyUrl`: The HTTP proxy to use to route all the HTTP requests of the browser. By default it use the public IP of the host.
-- `timezone`: The timezone to set the browser on. By default it will check the public IP used by the browser and use the timezone associated to it.
-- `userDataId`: The ID of the user data to use when browsing and to save after. If no user data id, the browsing session won't be saved. It is required to use S3 to store the user data.
-- `userDataReadOnly`: The ID of the user data to use when browsing. The user data won't be saved after the browser is closed.
-
-You use them like this: `ws://localhost:9999?proxyUrl=http://proxy.com&userDataId=123` when connecting to a browser.
-
-### Environment Variables
-
-- `PORT`: The HTTP port of the web server. The default port is `9999`.
-- `MAX_BROWSER_INSTANCES`: The maximum number of browsers the instance can run concurrently. The default value is `99`.
-- `S3_ENDPOINT`: The endpoint of the S3 server to use for storage.
-- `S3_ACCESS_KEY_ID`: Access key ID to connect to the S3 server.
-- `S3_SECRET_ACCESS_KEY`: Secret access key to connect to the S3 server.
-- `S3_USER_DATA_BUCKET`: The S3 bucket to store the user data.
-- `TAGS`: The tags used to identify the pool of browsers. No tags by default. The tags are in the following format `a=1,b=2,c=3`.
-
-## Cloud or self-hosted
-
-The cloud and self-hosted versions offer the same features.
-
-You should use the self-hosted version if you are looking to host on your own server or to test locally. It works perfectly if you are scaling vertically. 1 server to handle multiple browsers and the S3 storage for user data.
-
-The cloud version allows you to focus on scaling your features while we handle all the infrastructure. You connect to our CDP endpoint and we will handle the scaling, the S3 storage and the proxy. No version management, no infrastructure deployment and priority support.
-
-Our proxy is available as a standalone HTTP proxy. You don't need to use our cloud version to get access to our proxies. It works with the self-hosted version and it is really cheap!
+- [Getting Started](https://docs.blitzbrowser.com/self-hosted/getting-started)
+- [Persist the user data with S3](https://docs.blitzbrowser.com/self-hosted/user-data-storage)
+- [Configure your browser session](https://docs.blitzbrowser.com/self-hosted/chrome-devtools-protocol)
 
 ## Support
 
