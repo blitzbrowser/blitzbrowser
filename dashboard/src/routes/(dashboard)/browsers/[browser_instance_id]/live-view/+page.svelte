@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import { browser_store } from '$lib/browsers.svelte';
   import * as Card from '$lib/components/ui/card';
-  import { websocket_url } from '$lib/urls';
+  import { blitzbrowser_api_key, websocket_url } from '$lib/api';
   import { onDestroy, onMount } from 'svelte';
 
   let browser = $derived(
@@ -10,7 +10,7 @@
   );
 
   let vnc_url = $derived(
-    `${websocket_url}browser-instances/${page.params.browser_instance_id}/vnc`,
+    `${websocket_url}browser-instances/${page.params.browser_instance_id}/vnc?apiKey=${blitzbrowser_api_key}`,
   );
   let vnc_connection_status: 'CONNECTED' | 'CONNECTING' | 'DISCONNECTED' =
     $state('DISCONNECTED');

@@ -6,6 +6,7 @@ services:
     ports:
       - "9999:9999"
     environment:
+      API_KEY: asd
       S3_ENDPOINT: http://s3:9000
       S3_ACCESS_KEY_ID: rustfsadmin
       S3_SECRET_ACCESS_KEY: rustfsadmin
@@ -19,6 +20,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      AUTH_KEY: 123
+      BLITZBROWSER_API_KEY: asd
     restart: always
   s3:
     image: rustfs/rustfs

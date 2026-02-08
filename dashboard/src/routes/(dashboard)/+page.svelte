@@ -6,6 +6,8 @@
   import * as Table from '$lib/components/ui/table';
   import * as Tooltip from '$lib/components/ui/tooltip';
   import { DateTime } from 'luxon';
+  
+  export const ssr = false;
 </script>
 
 <svelte:head>

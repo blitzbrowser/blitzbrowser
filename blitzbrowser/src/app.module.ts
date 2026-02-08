@@ -10,6 +10,8 @@ import { WebSocketGateway } from './gateways/websocket.gateway';
 import { BrowserInstanceWebSocketGateway } from './gateways/browser-instance.gateway';
 import { BrowserPoolController } from './controllers/browser-pool.controller';
 import { ScheduleModule } from '@nestjs/schedule';
+import { APP_GUARD } from '@nestjs/core';
+import { ApiKeyGuard } from './guards/api-key.guard';
 
 const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S3_')).length === 0 ? [] : [
   {
@@ -39,6 +41,13 @@ const USER_DATA_PROVIDERS = Object.keys(process.env).filter(k => k.startsWith('S
     BrowserPoolController,
   ],
   providers: [
+    ApiKeyGuard,
+
+    {
+      provide: APP_GUARD,
+      useExisting: ApiKeyGuard,
+    },
+    
     WebSocketGateway,
     CDPWebSocketGateway,
     VNCWebSocketGateway,

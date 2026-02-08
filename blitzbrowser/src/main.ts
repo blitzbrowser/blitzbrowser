@@ -9,7 +9,7 @@ const logger = new Logger();
 
 logger.log('#########################################################');
 logger.log(`# Version: ${package_json.version}`);
-logger.log(`# Website: https://blitzbrowser.com`);
+logger.log(`# Website: https://docs.blitzbrowser.com`);
 logger.log(`# Github : https://github.com/blitzbrowser/blitzbrowser`);
 logger.log(`# Discord: https://discord.com/invite/qZ3tCZJ2Ze`);
 logger.log('#########################################################');
@@ -19,7 +19,7 @@ async function bootstrap() {
   
   app.enableCors();
 
-  await app.listen(process.env.PORT || 9999);
+  await app.listen(process.env.PORT || 9999, '0.0.0.0');
 }
 
 bootstrap();

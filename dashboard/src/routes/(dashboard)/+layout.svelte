@@ -1,13 +1,13 @@
 <script lang="ts">
-  import './layout.css';
-  import { ModeWatcher } from 'mode-watcher';
-  import AppSidebar from '$lib/components/app-sidebar.svelte';
-  import { Separator } from '$lib/components/ui/separator/index.js';
-  import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-  import favicon from '$lib/assets/favicon.ico';
-  import { onMount } from 'svelte';
-  import { browser_store } from '$lib/browsers.svelte';
-  import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
+  import "../layout.css";
+  import { ModeWatcher } from "mode-watcher";
+  import AppSidebar from "$lib/components/app-sidebar.svelte";
+  import { Separator } from "$lib/components/ui/separator/index.js";
+  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+  import favicon from "$lib/assets/favicon.ico";
+  import { onMount } from "svelte";
+  import { browser_store } from "$lib/browsers.svelte";
+  import Breadcrumbs from "$lib/components/breadcrumbs.svelte";
 
   let { children } = $props();
 
