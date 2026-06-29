@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> I'm not maintaining this project anymore. Web automation require too much time to maintain, it is a cat and mouse game. I will keep the project online because I think some features are interesting to learn from.
+
 <div align="center">
   <a href="https://docs.blitzbrowser.com/" align="center">
     <center align="center">
